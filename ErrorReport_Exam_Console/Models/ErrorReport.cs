@@ -16,6 +16,9 @@ namespace ErrorReport_Exam_Console.Models
         public DateTime? UpdatedAt { get; set; }
         public List<Comment> Comments { get; set; } = new List<Comment>();
         public Customer Customer { get; set; } = null!;
-
+        public int WorkerId { get; set; }
+        public string WorkerFirstName { get; set; }
+        public string WorkerLastName { get; set; }
+        public string NameInitials { get; internal set; }
     }
 }

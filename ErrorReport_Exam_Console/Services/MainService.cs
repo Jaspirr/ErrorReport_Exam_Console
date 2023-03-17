@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace ErrorReport_Exam_Console.Services
 {
+    public class MainService { 
     public async Task CreateErrorReportAsync()
     {
         var errorReport = new ErrorReport();
@@ -232,4 +233,4 @@ namespace ErrorReport_Exam_Console.Services
     }
 }
 
-
+}

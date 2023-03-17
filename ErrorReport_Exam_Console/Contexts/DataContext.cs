@@ -46,7 +46,7 @@ namespace ErrorReport_Exam_Console.Contexts
 
         public DbSet<CustomerEntity> Customers { get; set; } = null!;
         public DbSet<CommentEntity> Comments { get; set; } = null!;
-        public DbSet<ErrorReportEntity> Errorreports { get; set; } = null!;
+        public DbSet<ErrorReportEntity> ErrorReports { get; set; } = null!;
         public DbSet<WorkerEntity> Workers { get; set; } = null!;
 
 

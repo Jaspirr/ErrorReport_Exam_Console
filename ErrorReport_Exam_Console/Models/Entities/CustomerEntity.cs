@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ErrorReport_Exam_Console.Models.Entities
 {
-    [Index(nameof(EmailAdress), IsUnique = true)]
+    [Index(nameof(EmailAddress), IsUnique = true)]
     public class CustomerEntity
     {
         [Key]
@@ -23,16 +23,16 @@ namespace ErrorReport_Exam_Console.Models.Entities
         public string LastName { get; set; } = null!;
 
         [StringLength(100)]
-        public string EmailAdress { get; set; } = null!;
+        public string EmailAddress { get; set; } = null!;
 
         [Column(TypeName = "char(13)")]
         public string? PhoneNumber { get; set; }
 
         [Required]
-        public int AddressId { get; set; }
+        public int WorkerId { get; set; }
         public WorkerEntity Worker { get; set; } = null!;
 
-        public ICollection<ErrorReportEntity> Tickets { get; set; } = new HashSet<ErrorReportEntity>();
+        public ICollection<ErrorReportEntity> ErrorReports { get; set; } = new HashSet<ErrorReportEntity>();
 
         public ICollection<CommentEntity> Comments { get; set; } = new HashSet<CommentEntity>();
     }

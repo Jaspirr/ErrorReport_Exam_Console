@@ -1,6 +1,7 @@
 ﻿using ErrorReport_Exam_Console.Contexts;
 using ErrorReport_Exam_Console.Models.Entities;
 using ErrorReport_Exam_Console.Models;
+using ErrorReport_Exam_Console.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ErrorReport_Exam_Console.Services
 {
-    public class TicketService
+    public class ErrorReportService
     {
         private static DataContext _context = new DataContext();
 
