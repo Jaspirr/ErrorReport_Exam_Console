@@ -11,46 +11,38 @@ namespace ErrorReport_Exam_Console.Contexts
 {
     internal class DataContext : DbContext
     {
-        private readonly string _connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Jesper\source\repos\ErrorReport_Exam_Console\ErrorReport_Exam_Console\ErrorReportServiceDb.mdf;Integrated Security=True";
-
-        #region constructors
+        private readonly string _connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Jesper\Documents\sql_db_ConsoleErrorbase.mdf;Integrated Security=True;Connect Timeout=30";
+        public DbSet<CustomerEntity> Customers { get; set; } = null!;
+        public DbSet<ErrorReportEntity> ErrorReports { get; set; } = null!;
+        public DbSet<CommentEntity> Comments { get; set; } = null!;
         public DataContext()
         {
-
         }
-        public DataContext(DbContextOptions<DataContext> options) : base(options)      //constructor av klassen DataContext som ärver från DbContext klassen i EFC, som instansierar ifrån DbContextOptions. Initierar DbContext med de som skickas in, så vi kan interagera med databasen.
+
+        public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
-
         }
 
-        #endregion
-
-
-        #region overrides
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)  //config. av databasen,vilken connectionstring den skall till. anv sig av SqlServer.
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
                 optionsBuilder.UseSqlServer(_connectionString);
         }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<ErrorReportEntity>()
+                .HasOne<CustomerEntity>(i => i.Customer)
+                .WithMany(c => c.ErrorReports)
+                .HasForeignKey(i => i.CustomerId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<CommentEntity>()
+                .HasOne<ErrorReportEntity>(c => c.ErrorReport)
+                .WithMany(i => i.Comments)
+                .HasForeignKey(c => c.ErrorReportId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
-
-        #endregion
-
-
-        #region entities
-
-        public DbSet<CustomerEntity> Customers { get; set; } = null!;
-        public DbSet<CommentEntity> Comments { get; set; } = null!;
-        public DbSet<ErrorReportEntity> ErrorReports { get; set; } = null!;
-        public DbSet<WorkerEntity> Workers { get; set; } = null!;
-
-
-        #endregion
     }
 }
 

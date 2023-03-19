@@ -12,16 +12,10 @@ namespace ErrorReport_Exam_Console.Models.Entities
     public class CommentEntity
     {
         [Key]
-        public int CustomerId { get; set; }
+        public int CommentId { get; set; }
+        public string Comment { get; set; } = null!;
+        public DateTime CreatedAt { get; set; }
 
-        [Required]
-        [Column(TypeName = "nvarchar(500)")]
-        public string Text { get; set; } = null!;
-
-        [Required]
-        public DateTime Time { get; set; }
-
-        [Required]
         public int ErrorReportId { get; set; }
         public ErrorReportEntity ErrorReport { get; set; } = null!;
     }

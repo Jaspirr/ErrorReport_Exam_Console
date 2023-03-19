@@ -14,26 +14,19 @@ namespace ErrorReport_Exam_Console.Models.Entities
         [Key]
         public int ErrorReportId { get; set; }
 
-        [Required]
-        [Column(TypeName = "nvarchar(500)")]
+        [StringLength(100)]
+        public string Title { get; set; } = null!;
         public string Description { get; set; } = null!;
 
-        [Required]
-        public ErrorReportStatus Status { get; set; }
+        [StringLength(30)]
+        public string ErrorReportStatus { get; set; } = null!;
+        public DateTime Time { get; set; }
 
-        public ICollection<CommentEntity> Comments { get; set; } = new HashSet<CommentEntity>();
-
-        [Required]
         public int CustomerId { get; set; }
         public CustomerEntity Customer { get; set; } = null!;
-
-        [Required]
-        public DateTime CreatedAt { get; set; }
-
-        public DateTime? UpdatedAt { get; set; }
+        public virtual ICollection<CommentEntity> Comments { get; set; } = new List<CommentEntity>();
     }
-
-    public enum ErrorReportStatus
+        public enum ErrorReportStatus
     {
         NotStarted,
         Started,

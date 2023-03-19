@@ -26,14 +26,7 @@ namespace ErrorReport_Exam_Console.Models.Entities
         public string EmailAddress { get; set; } = null!;
 
         [Column(TypeName = "char(13)")]
-        public string? PhoneNumber { get; set; }
-
-        [Required]
-        public int WorkerId { get; set; }
-        public WorkerEntity Worker { get; set; } = null!;
-
-        public ICollection<ErrorReportEntity> ErrorReports { get; set; } = new HashSet<ErrorReportEntity>();
-
-        public ICollection<CommentEntity> Comments { get; set; } = new HashSet<CommentEntity>();
+        public string PhoneNumber { get; set; } = null!;
+        public virtual ICollection<ErrorReportEntity> ErrorReports { get; set; } = new List<ErrorReportEntity>();
     }
 }
