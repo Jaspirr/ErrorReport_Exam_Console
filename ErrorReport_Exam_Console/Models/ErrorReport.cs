@@ -8,7 +8,8 @@ namespace ErrorReport_Exam_Console.Models
 {
     internal class ErrorReport
     {
-        public int CustomerId { get; set; }
+
+        public int ErrorReportId { get; set; }
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;
         public string EmailAddress { get; set; } = null!;

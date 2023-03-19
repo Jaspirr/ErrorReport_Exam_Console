@@ -48,7 +48,7 @@ namespace ErrorReport_Exam_Console.Services
             foreach (var _errorReport in await _context.ErrorReports.Include(x => x.Customer).ToListAsync())
                 _errorReports.Add(new ErrorReport
                 {
-                    CustomerId = _errorReport.CustomerId,
+                    ErrorReportId = _errorReport.CustomerId,
                     FirstName = _errorReport.Customer.FirstName,
                     LastName = _errorReport.Customer.LastName,
                     EmailAddress = _errorReport.Customer.EmailAddress,
@@ -69,7 +69,7 @@ namespace ErrorReport_Exam_Console.Services
             if (_errorReport != null)
                 return new ErrorReport
                 {
-                    CustomerId = _errorReport.CustomerId,
+                    ErrorReportId = _errorReport.CustomerId,
                     FirstName = _errorReport.Customer.FirstName,
                     LastName = _errorReport.Customer.LastName,
                     EmailAddress = _errorReport.Customer.EmailAddress,
@@ -86,7 +86,7 @@ namespace ErrorReport_Exam_Console.Services
 
         public static async Task UpdateAsync(ErrorReport errorReport)
         {
-            var _errorReportEntity = await _context.ErrorReports.Include(x => x.Customer).FirstOrDefaultAsync(x => x.CustomerId == errorReport.CustomerId);
+            var _errorReportEntity = await _context.ErrorReports.Include(x => x.Customer).FirstOrDefaultAsync(x => x.CustomerId == errorReport.ErrorReportId);
             if (_errorReportEntity != null)
             {
                 if (!string.IsNullOrEmpty(_errorReportEntity.Title))
@@ -119,7 +119,7 @@ namespace ErrorReport_Exam_Console.Services
 
         public static async Task DeleteAsync(int id)
         {
-            var errorReport = await _context.ErrorReports.Include(x => x.Customer).FirstOrDefaultAsync(x => x.CustomerId == id);
+            var errorReport = await _context.ErrorReports.Include(x => x.Customer).FirstOrDefaultAsync(x => x.ErrorReportId == id);
             if (errorReport != null)
             {
                 _context.Remove(errorReport);

@@ -58,7 +58,7 @@ namespace ErrorReport_Exam_Console.Services
             }
         }
 
-        private async Task OptionOneAsync()
+        private static async Task OptionOneAsync()
         {
             var errorReport = new ErrorReport();
 
@@ -89,7 +89,7 @@ namespace ErrorReport_Exam_Console.Services
             //Console.ReadKey();
         }
 
-        private async Task OptionTwoAsync()
+        private static async Task OptionTwoAsync()
         {
             var errorReports = await DataService.GetAllAsync();
 
@@ -101,7 +101,7 @@ namespace ErrorReport_Exam_Console.Services
                 // Skriv ut en lista över alla ärenden med deras ID
                 foreach (ErrorReport errorReport in errorReports)
                 {
-                    Console.WriteLine($"ID: {errorReport.CustomerId}, Report Title: {errorReport.Title}");
+                    Console.WriteLine($"ID: {errorReport.ErrorReportId}, Report Title: {errorReport.Title}");
                 }
 
                 // Be användaren att ange ID för det ärende de vill titta närmare på
@@ -112,7 +112,7 @@ namespace ErrorReport_Exam_Console.Services
                     if (errorReport != null)
                     {
                         Console.Clear();
-                        Console.WriteLine($"Id: {errorReport.CustomerId}");
+                        Console.WriteLine($"Id: {errorReport.ErrorReportId}");
                         Console.WriteLine($"Name: {errorReport.FirstName} {errorReport.LastName}");
                         Console.WriteLine($"Email: {errorReport.EmailAddress}");
                         Console.WriteLine($"Phonenumber: {errorReport.PhoneNumber}");
@@ -130,8 +130,12 @@ namespace ErrorReport_Exam_Console.Services
                     Console.WriteLine("Invalid input. Please enter a valid ID.");
                 }
             }
+            else
+            {
+                Console.WriteLine("There are no error reports in the database.");
+            }
         }
-        private async Task OptionThreeAsync()
+        private static async Task OptionThreeAsync()
         {
 
             Console.Write("Enter the ID on the Report: ");
@@ -142,7 +146,7 @@ namespace ErrorReport_Exam_Console.Services
 
                 if (errorReport != null)
                 {
-                    Console.WriteLine($"{errorReport.CustomerId}");
+                    Console.WriteLine($"{errorReport.ErrorReportId}");
                     Console.WriteLine($"Name: {errorReport.FirstName} {errorReport.LastName}");
                     Console.WriteLine($"Email: {errorReport.EmailAddress}");
                     Console.WriteLine($"Phonenumber: {errorReport.PhoneNumber}");
@@ -168,7 +172,7 @@ namespace ErrorReport_Exam_Console.Services
 
         }
 
-        private async Task OptionFourAsync()
+        private static async Task OptionFourAsync()
         {
             Console.Write("Enter the ID of the Report you want to update: ");
 
@@ -223,7 +227,7 @@ namespace ErrorReport_Exam_Console.Services
             }
         }
 
-        private async Task OptionFiveAsync()
+        private static async Task OptionFiveAsync()
         {
             var errorReports = await DataService.GetAllAsync();
 
@@ -233,7 +237,7 @@ namespace ErrorReport_Exam_Console.Services
                 Console.WriteLine("All reports:");
                 foreach (var errorReport in errorReports)
                 {
-                    Console.WriteLine($"Id: {errorReport.CustomerId}");
+                    Console.WriteLine($"Id: {errorReport.ErrorReportId}");
                     Console.WriteLine($"Name: {errorReport.FirstName} {errorReport.LastName}");
                     Console.WriteLine($"Email: {errorReport.EmailAddress}");
                     Console.WriteLine($"Phonenumber: {errorReport.PhoneNumber}");
@@ -248,7 +252,7 @@ namespace ErrorReport_Exam_Console.Services
                     var errorReportToDelete = await DataService.GetOneAsync(id);
                     if (errorReportToDelete != null)
                     {
-                        await DataService.DeleteAsync(errorReportToDelete.CustomerId);
+                        await DataService.DeleteAsync(errorReportToDelete.ErrorReportId);
                         Console.WriteLine($"Report with ID {id} has been deleted");
                     }
                     else
