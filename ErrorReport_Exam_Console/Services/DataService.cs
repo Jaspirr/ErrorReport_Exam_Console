@@ -63,9 +63,9 @@ namespace ErrorReport_Exam_Console.Services
 
 
 
-        public static async Task<ErrorReport> GetOneAsync(string emailAddress)
+        public static async Task<ErrorReport> GetOneAsync(int id)
         {
-            var _errorReport = await _context.ErrorReports.Include(x => x.Customer).FirstOrDefaultAsync(x => x.EmailAddress == emailAddress);
+            var _errorReport = await _context.ErrorReports.Include(x => x.Customer).FirstOrDefaultAsync(x => x.ErrorReportId == id);
             if (_errorReport != null)
                 return new ErrorReport
                 {
@@ -131,9 +131,9 @@ namespace ErrorReport_Exam_Console.Services
             }
         }
 
-        public static async Task DeleteAsync(string emailAddress)
+        public static async Task DeleteAsync(int id)
         {
-            var errorReport = await _context.ErrorReports.Include(x => x.Customer).FirstOrDefaultAsync(x => x.EmailAddress == emailAddress);
+            var errorReport = await _context.ErrorReports.Include(x => x.Customer).FirstOrDefaultAsync(x => x.ErrorReportId == id);
             if (errorReport != null)
             {
                 _context.Remove(errorReport);

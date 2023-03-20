@@ -11,7 +11,8 @@ CREATE TABLE ErrorReports (
     Description VARCHAR(200) NOT NULL,
     Time DATETIME NOT NULL,
     CustomerId uniqueidentifier NOT NULL,
-    ErrorReportStatus NVARCHAR (30)  NOT NULL
+    EmailAddress nvarchar(50) NOT NULL,
+    ErrorReportStatus NVARCHAR (30)  NOT NULL,
     FOREIGN KEY (CustomerId) REFERENCES Customers(CustomerId)
 );
 CREATE TABLE Comments (

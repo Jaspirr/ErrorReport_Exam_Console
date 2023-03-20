@@ -11,7 +11,7 @@ namespace ErrorReport_Exam_Console.Contexts
 {
     internal class DataContext : DbContext
     {
-        private readonly string _connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Jesper\Documents\sql_db_ConsoleErrorbase.mdf;Integrated Security=True;Connect Timeout=30";
+        private readonly string _connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Jesper\Documents\sql_db_newConsoleErrorbase.mdf;Integrated Security=True;Connect Timeout=30";
         public DbSet<CustomerEntity> Customers { get; set; } = null!;
         public DbSet<ErrorReportEntity> ErrorReports { get; set; } = null!;
         public DbSet<CommentEntity> Comments { get; set; } = null!;

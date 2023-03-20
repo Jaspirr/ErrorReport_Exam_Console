@@ -1,5 +1,6 @@
 ﻿using ErrorReport_Exam_Console.Models;
 using ErrorReport_Exam_Console.Models.Entities;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +12,10 @@ namespace ErrorReport_Exam_Console.Services
 {
     internal class MenuService
     {
-        public async void MainMenu()
+        public static async void MainMenu()
         {
 
 
-            Console.Clear();
             Console.WriteLine("1. Create a Report");
             Console.WriteLine("2. Show all Reports");
             Console.WriteLine("3. Show a specific Report");
@@ -121,11 +121,10 @@ namespace ErrorReport_Exam_Console.Services
 
             Console.Write("Enter the Email Address on the Report: ");
 
-            var emailAddress = Console.ReadLine();
 
-            if (!string.IsNullOrEmpty(emailAddress))
+            if (int.TryParse(Console.ReadLine(), out int value))
             {
-                var errorReport = await DataService.GetOneAsync(emailAddress);
+                var errorReport = await DataService.GetOneAsync(value);
                 if (errorReport != null)
                 {
                     Console.WriteLine($"{errorReport.ErrorReportId}");
@@ -139,7 +138,7 @@ namespace ErrorReport_Exam_Console.Services
                 }
                 else
                 {
-                    Console.WriteLine($"No Report with specified Email Address {emailAddress} was found.");
+                    Console.WriteLine($"No Report with specified Email Address {value} was found.");
                     Console.ReadKey();
                 }
             }
@@ -155,11 +154,10 @@ namespace ErrorReport_Exam_Console.Services
         private static async Task OptionFourAsync()
         {
             Console.Write("Enter the Email Address of the Report you want to update: ");
-            var emailAddress = Console.ReadLine();
 
-            if (!string.IsNullOrEmpty(emailAddress))
+            if (int.TryParse(Console.ReadLine(), out int value))
             {
-                var errorReport = await DataService.GetOneAsync(emailAddress);
+                var errorReport = await DataService.GetOneAsync(value);
                 if (errorReport != null)
                 {
                     Console.Clear();
@@ -217,13 +215,12 @@ namespace ErrorReport_Exam_Console.Services
                 Console.Write("Enter the Email Address of the report you want to delete: ");
                 var emailAddress = Console.ReadLine();
 
-                if (!string.IsNullOrEmpty(emailAddress))
+                if (int.TryParse(Console.ReadLine(), out int value))
                 {
-                    var errorReport = await DataService.GetOneAsync(emailAddress);
-                    if (!string.IsNullOrEmpty(emailAddress))
+                    var errand = await DataService.GetOneAsync(value);
+                    if (errand != null)
                     {
-                        await DataService.DeleteAsync(emailAddress);
-                        Console.WriteLine($"Report with Email Address {emailAddress} has been deleted");
+                        await DataService.DeleteAsync(value);
                     }
                     else
                     {

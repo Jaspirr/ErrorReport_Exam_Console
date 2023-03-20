@@ -4,5 +4,5 @@ MenuService menu = new MenuService();
 
 while (true)
 {
-    menu.MainMenu();
+    MenuService.MainMenu();
 }
