@@ -14,7 +14,7 @@ namespace ErrorReport_Exam_Console.Models.Entities
     public class CustomerEntity
     {
         [Key]
-        public int CustomerId { get; set; }
+        public Guid CustomerId { get; set; } = Guid.NewGuid();
 
         [StringLength(50)]
         public string FirstName { get; set; } = null!;

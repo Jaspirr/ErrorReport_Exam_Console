@@ -38,7 +38,7 @@ namespace ErrorReport_Exam_Console.Contexts
             .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<CommentEntity>()
-                .HasOne<ErrorReportEntity>(c => c.ErrorReport)
+                .HasOne<ErrorReportEntity>(c => c.ErrorReports)
                 .WithMany(i => i.Comments)
                 .HasForeignKey(c => c.ErrorReportId)
                 .OnDelete(DeleteBehavior.NoAction);

@@ -1,7 +1,9 @@
 ﻿using ErrorReport_Exam_Console.Models;
+using ErrorReport_Exam_Console.Models.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,7 +19,7 @@ namespace ErrorReport_Exam_Console.Services
             Console.WriteLine("1. Create a Report");
             Console.WriteLine("2. Show all Reports");
             Console.WriteLine("3. Show a specific Report");
-            Console.WriteLine("4. Update a Report");
+            Console.WriteLine("4. Update a Report Status");
             Console.WriteLine("5. Delete a Report");
             var option = Console.ReadLine();
 
@@ -82,8 +84,6 @@ namespace ErrorReport_Exam_Console.Services
             Console.Write("Description: ");
             errorReport.Description = Console.ReadLine() ?? "";
 
-            errorReport.ErrorReportStatus = "Not Started";
-            
 
             await DataService.CreateAsync(errorReport);
             //Console.ReadKey();
@@ -95,55 +95,37 @@ namespace ErrorReport_Exam_Console.Services
 
             if (errorReports.Any())
             {
-                Console.Clear();
-                Console.WriteLine("Select an error report to view:");
 
-                // Skriv ut en lista över alla ärenden med deras ID
                 foreach (ErrorReport errorReport in errorReports)
                 {
-                    Console.WriteLine($"ID: {errorReport.ErrorReportId}, Report Title: {errorReport.Title}");
-                }
-
-                // Be användaren att ange ID för det ärende de vill titta närmare på
-                Console.Write("Enter the ID of the error report you want to view: ");
-                if (int.TryParse(Console.ReadLine(), out int id))
-                {
-                    var errorReport = await DataService.GetOneAsync(id);
-                    if (errorReport != null)
-                    {
-                        Console.Clear();
-                        Console.WriteLine($"Id: {errorReport.ErrorReportId}");
-                        Console.WriteLine($"Name: {errorReport.FirstName} {errorReport.LastName}");
-                        Console.WriteLine($"Email: {errorReport.EmailAddress}");
-                        Console.WriteLine($"Phonenumber: {errorReport.PhoneNumber}");
-                        Console.WriteLine($"Report: {errorReport.Title}");
-                        Console.WriteLine($"Description: {errorReport.Description}");
-                        Console.WriteLine($"Report Status: {errorReport.ErrorReportStatus} \n");
-                    }
-                    else
-                    {
-                        Console.WriteLine("No error report found with that ID.");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Invalid input. Please enter a valid ID.");
+                    Console.WriteLine($"ID: {errorReport.ErrorReportId}");
+                    Console.WriteLine($"Name: {errorReport.FirstName} {errorReport.LastName}");
+                    Console.WriteLine($"Email Address: {errorReport.EmailAddress}");
+                    Console.WriteLine($"Phonenumber: {errorReport.PhoneNumber}");
+                    Console.WriteLine($"Report Title: {errorReport.Title}");
+                    Console.WriteLine($"Description: {errorReport.Description}");
+                    Console.WriteLine($"Created: {errorReport.Time}");
+                    Console.WriteLine($"Status: {errorReport.ErrorReportStatus}");
+                    Console.WriteLine("");
                 }
             }
+        
             else
             {
                 Console.WriteLine("There are no error reports in the database.");
+                Console.WriteLine("");
             }
         }
         private static async Task OptionThreeAsync()
         {
 
-            Console.Write("Enter the ID on the Report: ");
+            Console.Write("Enter the Email Address on the Report: ");
 
-            if (int.TryParse(Console.ReadLine(), out int value))
+            var emailAddress = Console.ReadLine();
+
+            if (!string.IsNullOrEmpty(emailAddress))
             {
-                var errorReport = await DataService.GetOneAsync(value);
-
+                var errorReport = await DataService.GetOneAsync(emailAddress);
                 if (errorReport != null)
                 {
                     Console.WriteLine($"{errorReport.ErrorReportId}");
@@ -157,15 +139,13 @@ namespace ErrorReport_Exam_Console.Services
                 }
                 else
                 {
-                    Console.WriteLine($"No Report with specified Id {value} was found.");
+                    Console.WriteLine($"No Report with specified Email Address {emailAddress} was found.");
                     Console.ReadKey();
-
-
                 }
             }
             else
             {
-                Console.WriteLine("Not an ID number");
+                Console.WriteLine("Not an Email Address number");
                 Console.ReadKey();
 
             }
@@ -174,56 +154,44 @@ namespace ErrorReport_Exam_Console.Services
 
         private static async Task OptionFourAsync()
         {
-            Console.Write("Enter the ID of the Report you want to update: ");
+            Console.Write("Enter the Email Address of the Report you want to update: ");
+            var emailAddress = Console.ReadLine();
 
-            if (int.TryParse(Console.ReadLine(), out int value))
+            if (!string.IsNullOrEmpty(emailAddress))
             {
-                var errorReport = await DataService.GetOneAsync(value);
+                var errorReport = await DataService.GetOneAsync(emailAddress);
                 if (errorReport != null)
                 {
                     Console.Clear();
                     Console.WriteLine("Current Report Status: " + errorReport.ErrorReportStatus);
 
-                    Console.WriteLine("Select new Status:");
-                    Console.WriteLine("1. Not started");
-                    Console.WriteLine("2. Open");
-                    Console.WriteLine("3. Closed");
+                    Console.WriteLine("Select new Status with the starting number:");
+                    Console.WriteLine("0. Not started");
+                    Console.WriteLine("1. Open");
+                    Console.WriteLine("2. Closed");
 
                     Console.Write("Enter choice: ");
-                    if (int.TryParse(Console.ReadLine(), out int choice))
+                    var test = Console.ReadLine() ?? null!;
+                    if (!string.IsNullOrEmpty(test))
                     {
-                        switch (choice)
-                        {
-                            case 1:
-                                errorReport.ErrorReportStatus = "Not started";
-                                break;
-                            case 2:
-                                errorReport.ErrorReportStatus = "Open";
-                                break;
-                            case 3:
-                                errorReport.ErrorReportStatus = "Closed";
-                                break;
-                            default:
-                                Console.WriteLine("Invalid choice");
-                                return;
-                        }
-
-                        await DataService.UpdateAsync(errorReport);
-                        Console.WriteLine("Report updated successfully");
+                        errorReport.ErrorReportStatus = Enum.Parse<ErrorReportStatus>(test);
+                        await DataService.UpdateStatusAsync(errorReport);
                     }
                     else
                     {
-                        Console.WriteLine("Invalid choice");
+                        Console.WriteLine($"Status är oförändrad.");
+                        Console.WriteLine("");
                     }
                 }
                 else
                 {
-                    Console.WriteLine("No Report found with this Id");
+                    Console.WriteLine("No Report found with this Email Address");
+                    Console.WriteLine("");
                 }
             }
             else
             {
-                Console.WriteLine("No ID specified");
+                Console.WriteLine("No Email Address specified");
             }
         }
 
@@ -246,14 +214,16 @@ namespace ErrorReport_Exam_Console.Services
                     Console.WriteLine($"Report Status: {errorReport.ErrorReportStatus} \n");
                 }
 
-                Console.Write("Enter the ID of the report you want to delete: ");
-                if (int.TryParse(Console.ReadLine(), out int id))
+                Console.Write("Enter the Email Address of the report you want to delete: ");
+                var emailAddress = Console.ReadLine();
+
+                if (!string.IsNullOrEmpty(emailAddress))
                 {
-                    var errorReportToDelete = await DataService.GetOneAsync(id);
-                    if (errorReportToDelete != null)
+                    var errorReport = await DataService.GetOneAsync(emailAddress);
+                    if (!string.IsNullOrEmpty(emailAddress))
                     {
-                        await DataService.DeleteAsync(errorReportToDelete.ErrorReportId);
-                        Console.WriteLine($"Report with ID {id} has been deleted");
+                        await DataService.DeleteAsync(emailAddress);
+                        Console.WriteLine($"Report with Email Address {emailAddress} has been deleted");
                     }
                     else
                     {
@@ -262,7 +232,7 @@ namespace ErrorReport_Exam_Console.Services
                 }
                 else
                 {
-                    Console.WriteLine("Invalid ID");
+                    Console.WriteLine("Invalid Email Address");
                 }
             }
             else

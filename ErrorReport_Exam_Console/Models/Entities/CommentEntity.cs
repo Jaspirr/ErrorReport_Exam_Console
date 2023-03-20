@@ -17,6 +17,6 @@ namespace ErrorReport_Exam_Console.Models.Entities
         public DateTime CreatedAt { get; set; }
 
         public int ErrorReportId { get; set; }
-        public ErrorReportEntity ErrorReport { get; set; } = null!;
+        public ErrorReportEntity ErrorReports { get; set; } = null!;
     }
 }
