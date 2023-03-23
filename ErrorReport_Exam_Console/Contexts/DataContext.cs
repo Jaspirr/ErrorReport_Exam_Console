@@ -1,4 +1,5 @@
-﻿using ErrorReport_Exam_Console.Models.Entities;
+﻿using ErrorReport_Exam_Console.Models;
+using ErrorReport_Exam_Console.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -21,6 +22,7 @@ namespace ErrorReport_Exam_Console.Contexts
 
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
+           
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -35,13 +37,17 @@ namespace ErrorReport_Exam_Console.Contexts
                 .HasOne<CustomerEntity>(i => i.Customer)
                 .WithMany(c => c.ErrorReports)
                 .HasForeignKey(i => i.CustomerId)
-            .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<CommentEntity>()
                 .HasOne<ErrorReportEntity>(c => c.ErrorReports)
                 .WithMany(i => i.Comments)
                 .HasForeignKey(c => c.ErrorReportId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<ErrorReportEntity>()
+                .Property(e => e.ErrorReportStatus)
+                .HasDefaultValue("NotStarted");
         }
     }
 }

@@ -20,6 +20,6 @@ namespace ErrorReport_Exam_Console.Models
         public string Description { get; set; } = null!;
         public DateTime Time { get; set; } = DateTime.Now;
         public string Comment { get; set; } = null!;
-        public ErrorReportStatus ErrorReportStatus { get; set; } = ErrorReportStatus.NotStarted;
+        public string ErrorReportStatus { get; set; } = null!;
     }
 }

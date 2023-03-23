@@ -19,7 +19,7 @@ namespace ErrorReport_Exam_Console.Models.Entities
         public string Description { get; set; } = null!;
 
         [StringLength(30)]
-        public ErrorReportStatus ErrorReportStatus { get; set; } = ErrorReportStatus.NotStarted;
+        public string ErrorReportStatus { get; set; } = null!;
         public DateTime Time { get; set; }
 
         public Guid CustomerId { get; set; } = Guid.NewGuid();

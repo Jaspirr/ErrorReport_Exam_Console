@@ -51,6 +51,11 @@ namespace ErrorReport_Exam_Console.Services
                     await OptionFiveAsync();
                     Console.ReadKey();
                     break;
+                case "6":
+                    Console.Clear();
+                    await OptionSixAsync();
+                    Console.ReadKey();
+                    break;
                 default:
                     Console.Clear();
                     Console.WriteLine("Not an option");
@@ -119,7 +124,7 @@ namespace ErrorReport_Exam_Console.Services
         private static async Task OptionThreeAsync()
         {
 
-            Console.Write("Enter the Email Address on the Report: ");
+            Console.Write("Enter the Id on the Report: ");
 
 
             if (int.TryParse(Console.ReadLine(), out int value))
@@ -128,9 +133,9 @@ namespace ErrorReport_Exam_Console.Services
                 if (errorReport != null)
                 {
                     Console.WriteLine($"{errorReport.ErrorReportId}");
-                    Console.WriteLine($"Name: {errorReport.FirstName} {errorReport.LastName}");
-                    Console.WriteLine($"Email: {errorReport.EmailAddress}");
-                    Console.WriteLine($"Phonenumber: {errorReport.PhoneNumber}");
+                    Console.WriteLine($"Name: {errorReport.Customer.FirstName} {errorReport.Customer.LastName}");
+                    Console.WriteLine($"Email: {errorReport.Customer.EmailAddress}");
+                    Console.WriteLine($"Phonenumber: {errorReport.Customer.PhoneNumber}");
                     Console.WriteLine($"Report: {errorReport.Title}");
                     Console.WriteLine($"Description: {errorReport.Description}");
                     Console.WriteLine($"Report Status: {errorReport.ErrorReportStatus} \n");
@@ -138,13 +143,13 @@ namespace ErrorReport_Exam_Console.Services
                 }
                 else
                 {
-                    Console.WriteLine($"No Report with specified Email Address {value} was found.");
+                    Console.WriteLine($"No Report with specified Id {value} was found.");
                     Console.ReadKey();
                 }
             }
             else
             {
-                Console.WriteLine("Not an Email Address number");
+                Console.WriteLine("That Id was not found ");
                 Console.ReadKey();
 
             }
@@ -153,13 +158,33 @@ namespace ErrorReport_Exam_Console.Services
 
         private static async Task OptionFourAsync()
         {
-            Console.Write("Enter the Email Address of the Report you want to update: ");
+            Console.Write("Enter the Id of the Report you want to update: ");
 
             if (int.TryParse(Console.ReadLine(), out int value))
             {
                 var errorReport = await DataService.GetOneAsync(value);
                 if (errorReport != null)
                 {
+                    Console.WriteLine("Add a Report");
+
+                    Console.Write("First Name: ");
+                    errorReport.Customer.FirstName = Console.ReadLine() ?? "";
+
+                    Console.Write("Last Name: ");
+                    errorReport.Customer.LastName = Console.ReadLine() ?? "";
+
+                    Console.Write("Email Address: ");
+                    errorReport.Customer.EmailAddress = Console.ReadLine() ?? "";
+
+                    Console.Write("Phonenumber: ");
+                    errorReport.Customer.PhoneNumber = Console.ReadLine() ?? "";
+
+                    Console.Write("Title: ");
+                    errorReport.Title = Console.ReadLine() ?? "";
+
+                    Console.Write("Description: ");
+                    errorReport.Description = Console.ReadLine() ?? "";
+
                     Console.Clear();
                     Console.WriteLine("Current Report Status: " + errorReport.ErrorReportStatus);
 
@@ -168,28 +193,41 @@ namespace ErrorReport_Exam_Console.Services
                     Console.WriteLine("1. Open");
                     Console.WriteLine("2. Closed");
 
-                    Console.Write("Enter choice: ");
-                    var test = Console.ReadLine() ?? null!;
-                    if (!string.IsNullOrEmpty(test))
+                    string status = Console.ReadLine() ?? "";
+
+                    do
                     {
-                        errorReport.ErrorReportStatus = Enum.Parse<ErrorReportStatus>(test);
-                        await DataService.UpdateStatusAsync(errorReport);
+                        switch (status)
+                        {
+                            case "1":
+                                errorReport.ErrorReportStatus = "Ej Påbörjad";
+                                break;
+                            case "2":
+                                errorReport.ErrorReportStatus = "Pågående";
+                                break;
+                            case "3":
+                                errorReport.ErrorReportStatus = "Avslutad";
+                                break;
+                            default:
+                                Console.WriteLine("Inte ett alternativ");
+                                break;
+                        }
                     }
-                    else
-                    {
-                        Console.WriteLine($"Status är oförändrad.");
-                        Console.WriteLine("");
-                    }
+                    while (status != "1" && status != "2" && status != "3");
+
+
+                    await DataService.UpdateAsync(errorReport);
                 }
                 else
                 {
-                    Console.WriteLine("No Report found with this Email Address");
+                    Console.WriteLine("Invalid Id");
                     Console.WriteLine("");
                 }
             }
             else
             {
-                Console.WriteLine("No Email Address specified");
+                Console.WriteLine("You must write an Id of a report");
+                Console.WriteLine("");
             }
         }
 
@@ -199,9 +237,7 @@ namespace ErrorReport_Exam_Console.Services
 
             if (errorReports.Any())
             {
-                Console.Clear();
-                Console.WriteLine("All reports:");
-                foreach (var errorReport in errorReports)
+                foreach (ErrorReport errorReport in errorReports)
                 {
                     Console.WriteLine($"Id: {errorReport.ErrorReportId}");
                     Console.WriteLine($"Name: {errorReport.FirstName} {errorReport.LastName}");
@@ -211,31 +247,39 @@ namespace ErrorReport_Exam_Console.Services
                     Console.WriteLine($"Description: {errorReport.Description}");
                     Console.WriteLine($"Report Status: {errorReport.ErrorReportStatus} \n");
                 }
-
-                Console.Write("Enter the Email Address of the report you want to delete: ");
-                var emailAddress = Console.ReadLine();
-
-                if (int.TryParse(Console.ReadLine(), out int value))
-                {
-                    var errand = await DataService.GetOneAsync(value);
-                    if (errand != null)
-                    {
-                        await DataService.DeleteAsync(value);
-                    }
-                    else
-                    {
-                        Console.WriteLine("Report not found");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Invalid Email Address");
-                }
             }
             else
             {
-                Console.WriteLine("No reports found");
+                Console.WriteLine("No Reports found");
+                Console.WriteLine("");
             }
+
+
+
+
+        }
+        private static async Task OptionSixAsync()
+        {
+            var comment = new CommentModel();
+
+            Console.WriteLine("Enter the Id of the report you want to comment:");
+            if (int.TryParse(Console.ReadLine(), out int value))
+            {
+                var errorReport = await DataService.GetOneAsync(value);
+                if (errorReport != null)
+                {
+                    Console.WriteLine("Comment: ");
+                    comment.Comment = Console.ReadLine() ?? "";
+                    comment.CommentId = value;
+                    await DataService.AddCommentAsync(comment);
+                }
+                else
+                    Console.WriteLine("No valid Id was found");
+
+            }
+            else
+                Console.WriteLine("You must write an Id of a report");
+
         }
     }
 }
