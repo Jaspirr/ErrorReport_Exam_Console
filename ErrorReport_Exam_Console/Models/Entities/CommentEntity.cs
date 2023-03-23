@@ -14,7 +14,7 @@ namespace ErrorReport_Exam_Console.Models.Entities
         [Key]
         public int CommentId { get; set; }
         public string Comment { get; set; } = null!;
-        public DateTime CreatedAt { get; set; }
+        public DateTime Time2 { get; set; }
 
         public int ErrorReportId { get; set; }
         public ErrorReportEntity ErrorReports { get; set; } = null!;

@@ -146,7 +146,7 @@ namespace ErrorReport_Exam_Console.Services
                 var comment = new CommentEntity
                 {
                     Comment = entity.Comment,
-                    CreatedAt = entity.CreatedAt
+                    Time2= entity.Time2
                 };
                 __errorReportEntity.Comments.Add(comment);
                 await _context.SaveChangesAsync();
